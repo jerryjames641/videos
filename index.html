@@ -7,20 +7,20 @@
     <style>
         body {
             font-family: sans-serif;
-            background: linear-gradient(to right, #e0eafc, #cfdef3);
+            background: #2c2c2c; /* Changed to dark gray */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            color: #333;
+            color: #fff; /* Updated text color for contrast */
         }
 
         .container {
-            background-color: white;
+            background-color: #3a3a3a; /* Adjusted for better contrast with dark gray background */
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
 
@@ -30,10 +30,10 @@
         }
 
         .music-player {
-            background-color: #f8f9fa;
+            background-color: #444; /* Slightly lighter for contrast */
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         #album-cover {
@@ -42,9 +42,9 @@
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            animation: rotate 10s linear infinite; /* Animation */
-            animation-play-state: paused; /* Initially paused */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            animation: rotate 10s linear infinite;
+            animation-play-state: paused;
         }
 
         .controls {
@@ -73,7 +73,7 @@
             width: 150px;
         }
 
-        @keyframes rotate { /* Keyframes for animation */
+        @keyframes rotate {
             from {
                 transform: rotate(0deg);
             }

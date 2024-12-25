@@ -3,77 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Player</title>
+    <title>Sleek Music Player</title>
     <style>
         body {
             font-family: sans-serif;
-            background: #2c2c2c; /* Changed to dark gray */
+            background-color: #1a1a1a;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            color: #fff; /* Updated text color for contrast */
         }
 
-        .container {
-            background-color: #3a3a3a; /* Adjusted for better contrast with dark gray background */
-            padding: 30px;
+        .player-container {
+            background-color: #2e2e2e;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             text-align: center;
+            width: 350px;
         }
 
-        h1 {
-            color: #4c6ef5;
+        .song-info {
             margin-bottom: 20px;
         }
 
-        .music-player {
-            background-color: #444; /* Slightly lighter for contrast */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        .song-title {
+            font-size: 1.5em;
+            margin-bottom: 5px;
         }
 
-        #album-cover {
+        .artist-name {
+            font-size: 1em;
+            color: #aaa;
+        }
+
+        .cover-image {
             width: 200px;
             height: 200px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            animation: rotate 10s linear infinite;
-            animation-play-state: paused;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            transition: transform 0.2s ease;
+        }
+        .cover-image.rotating {
+            animation: rotate 8s linear infinite;
         }
 
-        .controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        #play-pause {
-            background-color: #4c6ef5;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-right: 10px;
-        }
-
-        #play-pause:hover {
-            background-color: #3b5bdb;
-        }
-
-        #volume-slider {
-            width: 150px;
-        }
-
-        @keyframes rotate {
+         @keyframes rotate {
             from {
                 transform: rotate(0deg);
             }
@@ -81,53 +60,140 @@
                 transform: rotate(360deg);
             }
         }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .control-button {
+            background: none;
+            border: none;
+            font-size: 2em;
+            color: #fff;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .control-button:hover {
+            color: #59c7f7;
+        }
+        .control-button:disabled {
+            color: #444;
+            cursor: not-allowed;
+        }
+
+          .progress-container {
+           display: flex;
+            align-items: center;
+            width: 100%;
+             gap: 5px;
+        }
+
+        .time-display {
+            font-size: 0.8em;
+             color: #aaa;
+        }
+
+        .progress-bar-wrapper {
+            flex-grow: 1;
+            height: 8px;
+            background-color: #444;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+       .progress-bar {
+            height: 100%;
+            background-color: #59c7f7;
+            border-radius: 5px;
+            width: 0;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>naalangal anayumoree</h1>
-        <div class="music-player">
-            <img id="album-cover" src="https://files.catbox.moe/88obwx.jpeg" alt="Album Cover">
-            <audio id="my-audio" controls>
-                <source src="https://files.catbox.moe/evwlar.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-            <div class="controls">
-                <button id="play-pause">Play</button>
-                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
-            </div>
+    <div class="player-container">
+        <div class="song-info">
+            <img src="https://files.catbox.moe/88obwx.jpeg" alt="Album Cover" class="cover-image">
+            <h2 class="song-title">naalangal</h2>
+            <p class="artist-name">joe balakrishnan</p>
         </div>
+        <div class="controls">
+            <button class="control-button" id="prev-btn" disabled>⏮</button>
+            <button class="control-button" id="play-btn">▶</button>
+            <button class="control-button" id="next-btn" disabled>⏭</button>
+        </div>
+        <div class="progress-container">
+            <span class="time-display" id="current-time">0:00</span>
+            <div class="progress-bar-wrapper" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <span class="time-display" id="total-duration">0:00</span>
+       </div>
+        <audio id="audio" preload="metadata">
+            <source src="https://files.catbox.moe/evwlar.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 
     <script>
-        const audio = document.getElementById('my-audio');
-        const playPauseButton = document.getElementById('play-pause');
-        const albumCover = document.getElementById('album-cover');
-        const volumeSlider = document.getElementById('volume-slider');
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const totalDurationDisplay = document.getElementById('total-duration');
+        const coverImage = document.querySelector('.cover-image');
 
         let isPlaying = false;
 
-        playPauseButton.addEventListener('click', () => {
+        playBtn.addEventListener('click', () => {
             if (isPlaying) {
                 audio.pause();
-                playPauseButton.textContent = 'Play';
-                albumCover.style.animationPlayState = 'paused';
+                playBtn.innerHTML = '▶';
+                coverImage.classList.remove('rotating');
             } else {
                 audio.play();
-                playPauseButton.textContent = 'Pause';
-                albumCover.style.animationPlayState = 'running';
+                playBtn.innerHTML = '❚❚';
+                coverImage.classList.add('rotating');
             }
-            isPlaying = !isPlaying;
+          isPlaying = !isPlaying;
+        });
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        function updateProgress() {
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        }
+
+        audio.addEventListener('timeupdate', updateProgress);
+
+        progressContainer.addEventListener('click', (e) => {
+            const containerWidth = progressContainer.offsetWidth;
+            const clickX = e.offsetX;
+            const seekTime = (clickX / containerWidth) * audio.duration;
+            audio.currentTime = seekTime;
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            totalDurationDisplay.textContent = formatTime(audio.duration);
         });
 
         audio.addEventListener('ended', () => {
+            playBtn.innerHTML = '▶';
+            coverImage.classList.remove('rotating');
             isPlaying = false;
-            playPauseButton.textContent = 'Play';
-            albumCover.style.animationPlayState = 'paused';
-        });
-
-        volumeSlider.addEventListener('input', () => {
-            audio.volume = volumeSlider.value;
         });
 
     </script>
